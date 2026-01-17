@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKO26 Seating Assignments - Appian</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #F4F4F4;
+            color: #212B35;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #00A6E0 0%, #0077B5 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .header .subtitle {
+            font-size: 18px;
+            font-weight: 400;
+            opacity: 0.95;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .info-section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #00A6E0;
+        }
+        
+        .info-section h2 {
+            color: #212B35;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #00A6E0;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #5A6C7D;
+        }
+        
+        .search-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #E5E7EB;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: 'Open Sans', sans-serif;
+            transition: border-color 0.2s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #00A6E0;
+        }
+        
+        .attendee-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .table-header {
+            background: #212B35;
+            color: white;
+            display: grid;
+            grid-template-columns: 3fr 1fr 1.5fr 2.5fr;
+            gap: 15px;
+            padding: 15px 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .attendee-row {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1.5fr 2.5fr;
+            gap: 15px;
+            padding: 15px 20px;
+            border-bottom: 1px solid #F0F0F0;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .attendee-row:hover {
+            background-color: #F8F9FA;
+        }
+        
+        .attendee-row:last-child {
+            border-bottom: none;
+        }
+        
+        .name {
+            font-weight: 600;
+            color: #212B35;
+        }
+        
+        .table-number {
+            background: #00A6E0;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .theater {
+            color: #5A6C7D;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .title {
+            color: #7A8A9A;
+            font-size: 14px;
+        }
+        
+        .footer {
+            background: #212B35;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .footer p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .header {
+                background: #00A6E0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .table-header,
+            .attendee-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .table-header {
+                display: none;
+            }
+            
+            .attendee-row > div::before {
+                font-weight: 600;
+                margin-right: 8px;
+            }
+            
+            .name::before {
+                content: 'Name: ';
+            }
+            
+            .table-number::before {
+                content: 'Table: ';
+            }
+            
+            .theater::before {
+                content: 'Theater: ';
+            }
+            
+            .title::before {
+                content: 'Title: ';
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SKO26 Seating Assignments</h1>
+        <div class="subtitle">Sales Kickoff 2026 - Alphabetical Directory</div>
+    </div>
+    
+    <div class="container">
+        <div class="info-section">
+            <h2>Event Overview</h2>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">128</div>
+                    <div class="stat-label">Total Attendees</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">18</div>
+                    <div class="stat-label">Tables (7-8 seats each)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Theater Regions</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by name, theater, title, or table number...">
+        </div>
+        
+        <div class="attendee-table">
+            <div class="table-header">
+                <div>Name</div>
+                <div>Table</div>
+                <div>Theater</div>
+                <div>Title</div>
+            </div>
+            <div id="attendeeList">
+                <!-- Attendees will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2026 Appian Corporation. All rights reserved.</p>
+    </div>
+    
+    <script>
+        const attendees = [
+            {name: "Alvarez, Ignacio", table: 14, theater: "EMEA", title: "SC"},
+            {name: "Andersen, Becca", table: 6, theater: "USPS", title: "Senior SC"},
+            {name: "Anderson, Max", table: 2, theater: "CNA", title: "Senior SC"},
+            {name: "Ansink, Mark", table: 2, theater: "EMEA", title: "Principal SC"},
+            {name: "Armstrong, John", table: 10, theater: "CNA", title: "Senior SC"},
+            {name: "Ashworth, Alyssa", table: 1, theater: "USPS", title: "AVP"},
+            {name: "Bailey, Brandon", table: 6, theater: "CNA", title: "Senior SC"},
+            {name: "Baxter, Ysanne", table: 12, theater: "SPEAR", title: "SC"},
+            {name: "Becker, Summer", table: 17, theater: "CNA", title: "Senior SC"},
+            {name: "Bethune, Nick", table: 12, theater: "APJ", title: "Principal SC"},
+            {name: "Biondo, Reid", table: 13, theater: "USPS", title: "SC"},
+            {name: "Blazquez, Sergio", table: 10, theater: "EMEA", title: "Senior SC"},
+            {name: "Boerescu, Alex", table: 4, theater: "EMEA", title: "Senior Advisory SC"},
+            {name: "Buxbaum, Colin", table: 7, theater: "EMEA", title: "Senior Advisory SC"},
+            {name: "Campell-Balcombe, Paul", table: 9, theater: "CNA", title: "SC"},
+            {name: "Capraro, Alicia", table: 1, theater: "USPS", title: "Senior Advisory SC"},
+            {name: "Cavalluzzo, Joe", table: 4, theater: "USPS", title: "Senior SC"},
+            {name: "Censullo, Joe", table: 5, theater: "USPS", title: "Senior SC"},
+            {name: "Chauhan, Deepak", table: 7, theater: "APJ", title: "Senior SC"},
+            {name: "Clarke, Rebecca", table: 15, theater: "USPS", title: "Senior SC"},
+            {name: "Costa, Noah", table: 4, theater: "CNA", title: "SC"},
+            {name: "Croce, Luigi", table: 7, theater: "EMEA", title: "SC"},
+            {name: "DeVito, Cooper", table: 12, theater: "CNA", title: "SC"},
+            {name: "Elger, Markus", table: 5, theater: "EMEA", title: "Senior SC"},
+            {name: "Esteves, Isabel", table: 9, theater: "CNA", title: "Senior SC"},
+            {name: "Farrell, Chris", table: 14, theater: "CNA", title: "Principal SC"},
+            {name: "Franci, Youssef", table: 2, theater: "SPEAR", title: "Associate SC"},
+            {name: "Fulton, Rob", table: 12, theater: "USPS", title: "AVP"},
+            {name: "Garvey, Joseph", table: 11, theater: "CNA", title: "Senior Advisory SC"},
+            {name: "Geer, Chris", table: 7, theater: "CNA", title: "Principal SC"},
+            {name: "Glover, Matt", table: 14, theater: "CNA", title: "Senior SC"},
+            {name: "Gomez, Daniel", table: 6, theater: "EMEA", title: "Senior SC"},
+            {name: "Gomez, Javier", table: 18, theater: "EMEA", title: "Senior SC"},
+            {name: "Graham, Julia", table: 5, theater: "USPS", title: "SC"},
+            {name: "Ha, Amy", table: 8, theater: "CNA", title: "SC"},
+            {name: "Handfield, Johanne", table: 18, theater: "CNA", title: "Principal SC"},
+            {name: "Haselby, Jack", table: 10, theater: "CNA", title: "SC"},
+            {name: "Heilemann, Jade", table: 10, theater: "USPS", title: "SC"},
+            {name: "Heupel, Mark", table: 3, theater: "CNA", title: "Director"},
+            {name: "Hill, Stewart", table: 11, theater: "CNA", title: "Director"},
+            {name: "Hillier, Dave", table: 13, theater: "SPEAR", title: "PSA"},
+            {name: "Hincewicz, Eddie", table: 18, theater: "USPS", title: "Senior SC"},
+            {name: "Hinds, Kris", table: 16, theater: "USPS", title: "SC"},
+            {name: "Ho, Wei Keong", table: 11, theater: "APJ", title: "Senior SC"},
+            {name: "Hock, Andreas", table: 11, theater: "EMEA", title: "Senior Advisory SC"},
+            {name: "Jacques, Adam", table: 4, theater: "APJ", title: "Senior SC"},
+            {name: "Jankins, Ross", table: 7, theater: "CNA", title: "Senior SC"},
+            {name: "Jarvis, Kiely", table: 16, theater: "EMEA", title: "Senior SC"},
+            {name: "Kane, Alexis", table: 5, theater: "CNA", title: "Manager"},
+            {name: "Kellison, Mike", table: 12, theater: "USPS", title: "Senior SC"},
+            {name: "Kiefer, Stephanie", table: 1, theater: "USPS", title: "Senior SC"},
+            {name: "Killion, Christopher", table: 6, theater: "USPS", title: "Director"},
+            {name: "Kocsis, Geri", table: 11, theater: "EMEA", title: "SC"},
+            {name: "Kollcaku, Skender", table: 3, theater: "EMEA", title: "SC"},
+            {name: "Kosmides, Ryan", table: 15, theater: "CNA", title: "Senior Advisory SC"},
+            {name: "Kreek, Liz", table: 13, theater: "CNA", title: "Senior SC"},
+            {name: "Kulkarni, Kiran", table: 5, theater: "APJ", title: "Senior SC"},
+            {name: "Law, Anthony", table: 3, theater: "CNA", title: "Senior SC"},
+            {name: "Lee, Roger", table: 9, theater: "EMEA", title: "AVP"},
+            {name: "Leonard, Christian", table: 16, theater: "CNA", title: "Senior SC"},
+            {name: "Levy, Mervyn", table: 3, theater: "SPEAR", title: "Sr Manager"},
+            {name: "Lewis, David", table: 3, theater: "CNA", title: "Senior SC"},
+            {name: "Licata, Michael", table: 3, theater: "CNA", title: "SC"},
+            {name: "Littig, Steve", table: 16, theater: "CNA", title: "Senior SC"},
+            {name: "Lorenz, Thomas", table: 8, theater: "EMEA", title: "Director"},
+            {name: "Louie, Tim", table: 14, theater: "APJ", title: "Senior SC"},
+            {name: "Lowe, Richard", table: 15, theater: "APJ", title: "Senior SC"},
+            {name: "Luz, Guilherme", table: 13, theater: "EMEA", title: "Senior SC"},
+            {name: "Mambrilla Velazquez, Marta", table: 17, theater: "EMEA", title: "SC"},
+            {name: "Markandan, Sathish", table: 6, theater: "CNA", title: "Senior Advisory SC"},
+            {name: "Martignon, Israel", table: 8, theater: "EMEA", title: "Senior SC"},
+            {name: "Mason, Anna", table: 11, theater: "EMEA", title: "Senior SC"},
+            {name: "Maynard, Andrew", table: 5, theater: "CNA", title: "Senior Advisory SC"},
+            {name: "McCabe, Chris", table: 17, theater: "APJ", title: "Director"},
+            {name: "McDonald, Mike", table: 8, theater: "CNA", title: "Senior SC"},
+            {name: "McIvor, Matt", table: 10, theater: "USPS", title: "Director"},
+            {name: "Medina, Pablo", table: 17, theater: "USPS", title: "Senior SC"},
+            {name: "Merritt, Michael", table: 13, theater: "USPS", title: "Principal SC"},
+            {name: "Mooney, Chris", table: 9, theater: "APJ", title: "Principal SC"},
+            {name: "Moore, Derek", table: 1, theater: "CNA", title: "Senior SC"},
+            {name: "Morari, Michaela", table: 17, theater: "CNA", title: "Senior SC"},
+            {name: "Munroe, Rob", table: 4, theater: "SPEAR", title: "AVP"},
+            {name: "Naughton, Grace", table: 3, theater: "APJ", title: "Senior SC"},
+            {name: "Ng, Davis", table: 16, theater: "CNA", title: "Director"},
+            {name: "Noonan, Shaun", table: 5, theater: "CNA", title: "Sr Director"},
+            {name: "Nussbaum, David", table: 9, theater: "USPS", title: "SC"},
+            {name: "O'Connell, Tom", table: 18, theater: "USPS", title: "Senior SC"},
+            {name: "Parashar, Anishka", table: 10, theater: "EMEA", title: "SC"},
+            {name: "Pinon, Pascal", table: 13, theater: "EMEA", title: "Senior Advisory SC"},
+            {name: "Pollack, Maya", table: 13, theater: "SPEAR", title: "Associate SC"},
+            {name: "Polutan, Elvin", table: 16, theater: "EMEA", title: "Senior SC"},
+            {name: "Preputnik, Daniel", table: 11, theater: "CNA", title: "Senior SC"},
+            {name: "Przybylski, Megan", table: 14, theater: "CNA", title: "Senior SC"},
+            {name: "Psalmond, Rose", table: 6, theater: "CNA", title: "Senior SC"},
+            {name: "Purtell, Steve", table: 8, theater: "USPS", title: "Senior Advisory SC"},
+            {name: "Rader, Val", table: 18, theater: "CNA", title: "Senior Advisory SC"},
+            {name: "Radossich, John", table: 12, theater: "CNA", title: "Senior SC"},
+            {name: "Reinhardt, Dan", table: 7, theater: "USPS", title: "Principal SC"},
+            {name: "Ribot, Lucia", table: 2, theater: "EMEA", title: "SC"},
+            {name: "Rickards, Jack", table: 14, theater: "USPS", title: "SC"},
+            {name: "Riquelme Osado, Ramon", table: 17, theater: "EMEA", title: "Principal SC"},
+            {name: "Rissmeyer, Ashley", table: 9, theater: "CNA", title: "SC"},
+            {name: "Roberts, Daniel", table: 18, theater: "EMEA", title: "Director"},
+            {name: "Santos, Rodrigo", table: 15, theater: "CNA", title: "Director"},
+            {name: "Sartorius, Kelsey", table: 17, theater: "USPS", title: "Senior Advisory SC"},
+            {name: "Scott, Carley", table: 2, theater: "USPS", title: "Director"},
+            {name: "Serrano, Roberto", table: 1, theater: "EMEA", title: "Senior SC"},
+            {name: "Shedlick, Carly", table: 8, theater: "CNA", title: "Senior Advisory SC"},
+            {name: "Shore, Tom", table: 14, theater: "SPEAR", title: "PSA"},
+            {name: "Soussi, Amine", table: 6, theater: "EMEA", title: "Senior SC"},
+            {name: "Sterchi, James", table: 15, theater: "CNA", title: "Senior SC"},
+            {name: "Tadros, Fady", table: 4, theater: "CNA", title: "Senior SC"},
+            {name: "Tang, Elliott", table: 5, theater: "CNA", title: "SC"},
+            {name: "Thiagarajan, Vijay Sai", table: 18, theater: "EMEA", title: "Senior SC"},
+            {name: "Thorn, Scott", table: 1, theater: "CNA", title: "Senior Advisory SC"},
+            {name: "Todd, Mike", table: 2, theater: "APJ", title: "Senior SC"},
+            {name: "Van Kampen, Eugene", table: 12, theater: "EMEA", title: "Senior SC"},
+            {name: "Vignerot, Rob", table: 8, theater: "EMEA", title: "Senior SC"},
+            {name: "Virtue, Alex", table: 1, theater: "EMEA", title: "Senior SC"},
+            {name: "Vlatko, Nicholas", table: 3, theater: "EMEA", title: "Senior SC"},
+            {name: "Walia, Angad", table: 1, theater: "CNA", title: "Director"},
+            {name: "Weaver, Grace", table: 7, theater: "SPEAR", title: "Associate SC"},
+            {name: "Winkler, Pete", table: 2, theater: "CNA", title: "Senior SC"},
+            {name: "Wofford, Daniel", table: 9, theater: "USPS", title: "Senior SC"},
+            {name: "Woll, Michael", table: 15, theater: "EMEA", title: "Senior SC"},
+            {name: "Woo, Wen Siang", table: 16, theater: "APJ", title: "Senior SC"},
+            {name: "Zafran, Aaron", table: 4, theater: "USPS", title: "Principal SC"},
+            {name: "de Jong, Jordan", table: 10, theater: "APJ", title: "Principal SC"},
+        ];
+        
+        function renderAttendees(filteredAttendees) {
+            const listElement = document.getElementById('attendeeList');
+            listElement.innerHTML = filteredAttendees.map(attendee => `
+                <div class="attendee-row">
+                    <div class="name">${attendee.name}</div>
+                    <div><span class="table-number">${attendee.table}</span></div>
+                    <div class="theater">${attendee.theater}</div>
+                    <div class="title">${attendee.title}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Initial render
+        renderAttendees(attendees);
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = attendees.filter(attendee => 
+                attendee.name.toLowerCase().includes(searchTerm) ||
+                attendee.theater.toLowerCase().includes(searchTerm) ||
+                attendee.title.toLowerCase().includes(searchTerm) ||
+                attendee.table.toString().includes(searchTerm)
+            );
+            renderAttendees(filtered);
+        });
+    </script>
+</body>
+</html>
